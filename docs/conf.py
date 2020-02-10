@@ -28,7 +28,7 @@ source_parsers = {
 
 # -- Project information -----------------------------------------------------
 
-project = u'Common documentation'
+project = u'Shadow Robot Documentation'
 copyright = u'2020, Shadow Robot Company'
 author = u'Shadow Robot Company'
 

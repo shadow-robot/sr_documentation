@@ -11,7 +11,7 @@ The first set of arguments is common to all scenarios:
 
 .. prompt:: bash $
 
-   docker run -it --security-opt seccomp=unconfined --network=host --pid=host --privileged -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -v /tmp/.X11-unix:/tmp/.X11-unix:rw [docker_repository]/[docker_image]:[docker_image_tag] [your_command]
+   docker run -it --security-opt seccomp=unconfined --network=host --pid=host --privileged -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e XDG_RUNTIME_DIR=/run/user/1000 -v /tmp/.X11-unix:/tmp/.X11-unix:rw [docker_repository]/[docker_image]:[docker_image_tag] [your_command]
 
 Where ``[your_command]`` is optional, but most likely terminator.
 
@@ -80,13 +80,13 @@ For each of the below examples, shadow-teleop-cyberglove may be substituted with
 
 .. prompt:: bash $
 
-   docker run --name teleop_manual -it --security-opt seccomp=unconfined --network=host --pid=host --privileged --ulimit core=-1 -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e interface=enx5647929203 -e ROS_MASTER_URI=http://localhost:11311 -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v /dev/input:/dev/input:rw -v /run/udev/data:/run/udev/data:rw shadowrobot/shadow-teleop-cyberglove:melodic-v0.0.1 bash -c "terminator -T 'Teleop Server Container' -x bash -c '/usr/local/bin/teleop-server-setup.sh && bash'"
+   docker run --name teleop_manual -it --security-opt seccomp=unconfined --network=host --pid=host --privileged --ulimit core=-1 -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e XDG_RUNTIME_DIR=/run/user/1000 -e interface=enx5647929203 -e ROS_MASTER_URI=http://localhost:11311 -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v /dev/input:/dev/input:rw -v /run/udev/data:/run/udev/data:rw shadowrobot/shadow-teleop-cyberglove:melodic-v0.0.1 bash -c "terminator -T 'Teleop Server Container' -x bash -c '/usr/local/bin/teleop-server-setup.sh && bash'"
 
 * Nvidia:
 
 .. prompt:: bash $
 
-   docker run --name teleop_manual -it --security-opt seccomp=unconfined --network=host --pid=host --privileged --ulimit core=-1 --runtime nvidia -e NVIDIA_DRIVER_CAPABILITIES=all -e NVIDIA_VISIBLE_DEVICES=all -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e interface=enx5647929203 -e ROS_MASTER_URI=http://localhost:11311 -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v /dev/input:/dev/input:rw -v /run/udev/data:/run/udev/data:rw shadowrobot/shadow-teleop-cyberglove:melodic-v0.0.1 bash -c "echo /usr/local/lib/x86_64-linux-gnu | sudo tee /etc/ld.so.conf.d/glvnd.conf && sudo ldconfig && terminator -T 'Teleop Server Container' -x bash -c '/usr/local/bin/teleop-server-setup.sh && bash'"
+   docker run --name teleop_manual -it --security-opt seccomp=unconfined --network=host --pid=host --privileged --ulimit core=-1 --runtime nvidia -e NVIDIA_DRIVER_CAPABILITIES=all -e NVIDIA_VISIBLE_DEVICES=all -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e XDG_RUNTIME_DIR=/run/user/1000 -e interface=enx5647929203 -e ROS_MASTER_URI=http://localhost:11311 -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v /dev/input:/dev/input:rw -v /run/udev/data:/run/udev/data:rw shadowrobot/shadow-teleop-cyberglove:melodic-v0.0.1 bash -c "echo /usr/local/lib/x86_64-linux-gnu | sudo tee /etc/ld.so.conf.d/glvnd.conf && sudo ldconfig && terminator -T 'Teleop Server Container' -x bash -c '/usr/local/bin/teleop-server-setup.sh && bash'"
 
 Dexterous Hand
 `````````````
@@ -95,10 +95,10 @@ Dexterous Hand
 
 .. prompt:: bash $
 
-   docker run --name dexterous_hand -it --security-opt seccomp=unconfined --network=host --pid=host --privileged -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e interface=enx5647929203 -v /tmp/.X11-unix:/tmp/.X11-unix:rw shadowrobot/dexterous-hand:melodic-v0.0.3 bash -c "terminator -T 'Dexterous Hand Container'"
+   docker run --name dexterous_hand -it --security-opt seccomp=unconfined --network=host --pid=host --privileged -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e XDG_RUNTIME_DIR=/run/user/1000 -e interface=enx5647929203 -v /tmp/.X11-unix:/tmp/.X11-unix:rw shadowrobot/dexterous-hand:melodic-v0.0.3 bash -c "terminator -T 'Dexterous Hand Container'"
 
 * Nvidia:
 
 .. prompt:: bash $
 
-   docker run --name dexterous_hand -it --security-opt seccomp=unconfined --network=host --pid=host --privileged --runtime nvidia -e NVIDIA_DRIVER_CAPABILITIES=all -e NVIDIA_VISIBLE_DEVICES=all -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e interface=enx5647929203 -v /tmp/.X11-unix:/tmp/.X11-unix:rw shadowrobot/dexterous-hand:melodic-v0.0.3 bash -c "echo /usr/local/lib/x86_64-linux-gnu | sudo tee /etc/ld.so.conf.d/glvnd.conf && sudo ldconfig && terminator -T 'Dexterous Hand Container'"
+   docker run --name dexterous_hand -it --security-opt seccomp=unconfined --network=host --pid=host --privileged --runtime nvidia -e NVIDIA_DRIVER_CAPABILITIES=all -e NVIDIA_VISIBLE_DEVICES=all -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e XDG_RUNTIME_DIR=/run/user/1000 -e interface=enx5647929203 -v /tmp/.X11-unix:/tmp/.X11-unix:rw shadowrobot/dexterous-hand:melodic-v0.0.3 bash -c "echo /usr/local/lib/x86_64-linux-gnu | sudo tee /etc/ld.so.conf.d/glvnd.conf && sudo ldconfig && terminator -T 'Dexterous Hand Container'"

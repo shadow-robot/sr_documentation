@@ -5,6 +5,18 @@ Our Docker images have some Shadow-specific configurations to allow running with
 
 In all of the examples given below, docker create is interchangeable with docker run; the latter will simple create and then start a container.
 
+Prerequisites
+---------------------
+Our images have been migrated to AWS ECR therefore they require authentication with AWS server before pulling them. In order to authenticate you need to install AWS CLI v2. You can find instructions here: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+
+After installation you have to run (once): ``aws configure`` to setup your credentials. You can find your credentials from the Google apps AWS SSO icon if you select ```Command line or programmatic access``.
+
+To authentication for Public ECR repos such as dexterous hand images just run this command (it last 12 hours): ```aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/shadowrobot```
+
+To authenticate for private repos: ```aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 080653068785.dkr.ecr.eu-west-2.amazonaws.com```
+
+
+
 Common Arguments
 ---------------------
 The first set of arguments is common to all scenarios:
@@ -80,13 +92,13 @@ For each of the below examples, shadow-teleop-cyberglove may be substituted with
 
 .. prompt:: bash $
 
-   docker run --name teleop_manual -it --security-opt seccomp=unconfined --network=host --pid=host --privileged --ulimit core=-1 -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e XDG_RUNTIME_DIR=/run/user/1000 -e interface=enx5647929203 -e ROS_MASTER_URI=http://localhost:11311 -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v /dev/input:/dev/input:rw -v /run/udev/data:/run/udev/data:rw shadowrobot/shadow-teleop-cyberglove:melodic-v0.0.1 bash -c "terminator -T 'Teleop Server Container'"
+   docker run --name teleop_manual -it --security-opt seccomp=unconfined --network=host --pid=host --privileged --ulimit core=-1 -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e XDG_RUNTIME_DIR=/run/user/1000 -e interface=enx5647929203 -e ROS_MASTER_URI=http://localhost:11311 -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v /dev/input:/dev/input:rw -v /run/udev/data:/run/udev/data:rw 080653068785.dkr.ecr.eu-west-2.amazonaws.com/shadow-teleop-cyberglove:noetic-night-build bash -c "terminator -T 'Teleop Server Container'"
 
 * Nvidia:
 
 .. prompt:: bash $
 
-   docker run --name teleop_manual -it --security-opt seccomp=unconfined --network=host --pid=host --privileged --ulimit core=-1 --gpus all -e NVIDIA_DRIVER_CAPABILITIES=all -e NVIDIA_VISIBLE_DEVICES=all -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e XDG_RUNTIME_DIR=/run/user/1000 -e interface=enx5647929203 -e ROS_MASTER_URI=http://localhost:11311 -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v /dev/input:/dev/input:rw -v /run/udev/data:/run/udev/data:rw shadowrobot/shadow-teleop-cyberglove:melodic-v0.0.1 bash -c "echo /usr/local/lib/x86_64-linux-gnu | sudo tee /etc/ld.so.conf.d/glvnd.conf && sudo ldconfig && terminator -T 'Teleop Server Container'"
+   docker run --name teleop_manual -it --security-opt seccomp=unconfined --network=host --pid=host --privileged --ulimit core=-1 --gpus all -e NVIDIA_DRIVER_CAPABILITIES=all -e NVIDIA_VISIBLE_DEVICES=all -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e XDG_RUNTIME_DIR=/run/user/1000 -e interface=enx5647929203 -e ROS_MASTER_URI=http://localhost:11311 -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v /dev/input:/dev/input:rw -v /run/udev/data:/run/udev/data:rw 080653068785.dkr.ecr.eu-west-2.amazonaws.com/shadow-teleop-cyberglove:noetic-night-build bash -c "echo /usr/local/lib/x86_64-linux-gnu | sudo tee /etc/ld.so.conf.d/glvnd.conf && sudo ldconfig && terminator -T 'Teleop Server Container'"
 
 Dexterous Hand
 `````````````
@@ -95,10 +107,10 @@ Dexterous Hand
 
 .. prompt:: bash $
 
-   docker run --name dexterous_hand -it --security-opt seccomp=unconfined --network=host --pid=host --privileged -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e XDG_RUNTIME_DIR=/run/user/1000 -e interface=enx5647929203 -v /tmp/.X11-unix:/tmp/.X11-unix:rw shadowrobot/dexterous-hand:melodic-v0.0.3 bash -c "terminator -T 'Dexterous Hand Container'"
+   docker run --name dexterous_hand -it --security-opt seccomp=unconfined --network=host --pid=host --privileged -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e XDG_RUNTIME_DIR=/run/user/1000 -e interface=enx5647929203 -v /tmp/.X11-unix:/tmp/.X11-unix:rw public.ecr.aws/shadowrobot/dexterous-hand:noetic-night-build bash -c "terminator -T 'Dexterous Hand Container'"
 
 * Nvidia:
 
 .. prompt:: bash $
 
-   docker run --name dexterous_hand -it --security-opt seccomp=unconfined --network=host --pid=host --privileged --gpus all -e NVIDIA_DRIVER_CAPABILITIES=all -e NVIDIA_VISIBLE_DEVICES=all -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e XDG_RUNTIME_DIR=/run/user/1000 -e interface=enx5647929203 -v /tmp/.X11-unix:/tmp/.X11-unix:rw shadowrobot/dexterous-hand:melodic-v0.0.3 bash -c "echo /usr/local/lib/x86_64-linux-gnu | sudo tee /etc/ld.so.conf.d/glvnd.conf && sudo ldconfig && terminator -T 'Dexterous Hand Container'"
+   docker run --name dexterous_hand -it --security-opt seccomp=unconfined --network=host --pid=host --privileged --gpus all -e NVIDIA_DRIVER_CAPABILITIES=all -e NVIDIA_VISIBLE_DEVICES=all -e DISPLAY -e QT_X11_NO_MITSHM=1 -e LOCAL_USER_ID=$(id -u) -e XDG_RUNTIME_DIR=/run/user/1000 -e interface=enx5647929203 -v /tmp/.X11-unix:/tmp/.X11-unix:rw public.ecr.aws/shadowrobot/dexterous-hand:noetic-night-build bash -c "echo /usr/local/lib/x86_64-linux-gnu | sudo tee /etc/ld.so.conf.d/glvnd.conf && sudo ldconfig && terminator -T 'Dexterous Hand Container'"

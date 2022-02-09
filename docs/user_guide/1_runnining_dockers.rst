@@ -11,7 +11,7 @@ Our images have been migrated to AWS ECR therefore they require authentication w
 
 After installation you have to run (once): ``aws configure`` to setup your credentials. You can find your credentials from the Google apps AWS SSO icon if you select ```Command line or programmatic access``.
 
-To authentication for Public ECR repos such as dexterous hand images just run this command (it last 12 hours): ```aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/shadowrobot```
+To authenticate for Public ECR repos such as dexterous hand images just run this command (it last 12 hours): ```aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/shadowrobot```
 
 To authenticate for private repos: ```aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 080653068785.dkr.ecr.eu-west-2.amazonaws.com```
 
